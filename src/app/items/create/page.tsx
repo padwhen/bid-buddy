@@ -3,12 +3,13 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createItemAction, createUploadUrlAction } from "./actions";
+import { pageTitleStyles } from "@/styles";
 
 export default async function HomePage() {
 
   return (
     <main className="container mx-auto py-12 space-y-8">
-      <h1 className="text-4xl font-bold">
+      <h1 className={pageTitleStyles}>
         Post an Item to Sell
       </h1>
       <form className="flex flex-col border p-8 rounded-xl space-y-4 max-w-lg"
