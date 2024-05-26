@@ -2,10 +2,8 @@ import { pgTable, serial, timestamp, text, primaryKey, integer } from 'drizzle-o
 import postgres from "postgres"
 import { drizzle } from "drizzle-orm/postgres-js"
 import type { AdapterAccountType } from "next-auth/adapters"
+import { relations } from 'drizzle-orm'
 
-export const bids = pgTable('bb_bids', {
-    id: serial("id").primaryKey()
-})
 
 const connectionString = "postgres://postgres:postgres@localhost:5432/drizzle"
 const pool = postgres(connectionString, { max: 1 })
@@ -71,8 +69,28 @@ export const items = pgTable("bb_item", {
     .references(() => users.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
     fileKey: text("fileKey").notNull(),
+    currentBid: integer("currentBid").notNull().default(0),
     startingPrice: integer("startingPrice").notNull().default(0),
     bidInterval: integer("bidInterval").notNull().default(100)
 })
+
+export const bids = pgTable('bb_bids', {
+    id: serial("id").primaryKey(),
+    amount: integer("amount").notNull(),
+    itemId: serial("itemId")
+            .notNull()
+            .references(() => items.id, { onDelete: "cascade" }),
+    userId: text("userId")
+            .notNull()
+            .references(() => users.id, { onDelete: 'cascade'}),
+    timestamp: timestamp("timestamp", { mode: "date" }).notNull()
+})
+
+export const usersRelations = relations(bids, ({ one }) => ({
+    user: one(users, {
+        fields: [bids.userId],
+        references: [users.id]
+    })
+}))
 
 export type Item = typeof items.$inferSelect
