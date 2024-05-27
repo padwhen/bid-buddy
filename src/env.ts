@@ -8,10 +8,13 @@ export const env = createEnv({
         CLOUDFARE_ACCOUNT_ID: z.string().min(1),
         CLOUDFARE_ACCESS_KEY_ID: z.string().min(1),
         CLOUDFARE_SECRET_ACCESS_KEY: z.string().min(1),
-        BUCKET_NAME: z.string().min(1)
+        BUCKET_NAME: z.string().min(1),
+        KNOCK_SECRET_KEY: z.string().min(1)
     },
     client: {
         NEXT_PUBLIC_BUCKET_URL: z.string().url(),
+        NEXT_PUBLIC_KNOCK_PUBLIC_API_KEY: z.string().min(1),
+        NEXT_PUBLIC_KNOCK_FEED_ID: z.string().min(1)
     },
     runtimeEnv: {
         DATABASE_URL: process.env.DATABASE_URL,
@@ -20,6 +23,9 @@ export const env = createEnv({
         CLOUDFARE_ACCESS_KEY_ID: process.env.CLOUDFARE_ACCESS_KEY_ID,
         CLOUDFARE_SECRET_ACCESS_KEY: process.env.CLOUDFARE_SECRET_ACCESS_KEY,
         BUCKET_NAME: process.env.BUCKET_NAME,
-        NEXT_PUBLIC_BUCKET_URL: process.env.NEXT_PUBLIC_BUCKET_URL
+        KNOCK_SECRET_KEY: process.env.KNOCK_SECRET_KEY,
+        NEXT_PUBLIC_BUCKET_URL: process.env.NEXT_PUBLIC_BUCKET_URL,
+        NEXT_PUBLIC_KNOCK_PUBLIC_API_KEY: process.env.NEXT_PUBLIC_KNOCK_PUBLIC_API_KEY,
+        NEXT_PUBLIC_KNOCK_FEED_ID: process.env.NEXT_PUBLIC_FEED_ID,
     }
 })

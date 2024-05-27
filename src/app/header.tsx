@@ -1,14 +1,23 @@
-import { auth } from "@/auth";
-import { SignIn } from "@/components/sign-in";
-import { SignOut } from "@/components/sign-out";
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { convertToDollar } from "@/util/currency";
+import { NotificationCell, NotificationFeedPopover, NotificationIconButton } from "@knocklabs/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRef, useState } from "react";
 
-export async function Header() {
-    const session = await auth()
+export function Header() {
+    const [isVisible, setIsVisible] = useState(false)
+    const notifButtonRef = useRef(null)
+    const session = useSession()
+    
+    const userId = session?.data?.user?.id;
+
     return (
-        <div className="bg-gray-200 py-2 items-center">
-            <div className="container flex justify-between">
+        <div className="bg-gray-200 py-2">
+            <div className="container flex justify-between items-center">
                 <div className="flex items-center gap-12">
                     <Link href="/" className="hover:underline flex items-center gap-2">
                         <Image src="/favicon.ico" width="50" height="50" alt="Logo" />
@@ -18,18 +27,49 @@ export async function Header() {
                         <Link href="/" className="hover:underline flex items-center gap-1">
                             All Auctions 
                         </Link>  
-                        <Link href="/items/create" className="hover:underline flex items-center gap-1">
-                            Create Auction 
-                        </Link>  
-                        <Link href="/auctions" className="hover:underline flex items-center gap-1">
-                            My Auctions  
-                        </Link>  
+                        {userId && (
+                            <>
+                                <Link href="/items/create" className="hover:underline flex items-center gap-1">
+                                    Create Auction 
+                                </Link>  
+                                <Link href="/auctions" className="hover:underline flex items-center gap-1">
+                                    My Auctions  
+                                </Link>                              
+                            </>
+                        )}
                     </div>         
                 </div>
 
                 <div className="flex items-center gap-4">
-                    {session?.user?.name}
-                    {session ? <SignOut /> : <SignIn />}
+                    <NotificationIconButton ref={notifButtonRef}
+                                            onClick={(e) => setIsVisible(!isVisible)} />
+                    <NotificationFeedPopover buttonRef={notifButtonRef}
+                                             isVisible={isVisible} onClose={() => setIsVisible(false)}
+                                             renderItem={({ item, ...props}) => 
+                                             (
+                                                <NotificationCell {...props} item={item}>
+                                                <div className="rounded-xl">
+                                                    <Link   className="text-blue-400 hover:text-blue-500"
+                                                            onClick={() => {setIsVisible(!isVisible)}}
+                                                            href={`/items/${item.data.itemId}`}>
+                                                        Someone outbidded you on{" "} <span className="font-bold">{item.data.itemName}</span>{" "}
+                                                        by ${convertToDollar(item.data.bidAmount)}
+                                                    </Link>
+                                                </div>
+                                                </NotificationCell>
+                                            )}
+                                             />
+                    {session.data?.user.image && (
+                        <Image src={session.data?.user.image} width="40" height="40" alt="user avatar" className="rounded-full" />
+                    )}
+                    <div>{session?.data?.user?.name}</div>
+                    <div>
+                        {userId ? (
+                            <Button type="submit" onClick={() => signOut({callbackUrl: '/'})}>Sign Out</Button>
+                        ) : (
+                            <Button type="submit" onClick={() => signIn()}>Sign In</Button>
+                        )}                        
+                    </div>
                 </div>
             </div>
         </div>
