@@ -1,4 +1,18 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Bidwhen by @padwhen
+
+AuctionMaster is an online auction app where users can bid against each other to win items. If someone outbids you, you'll get a notification so you can place a higher bid.
+
+## Features:
+* **Real-time Bidding:** Place bids and see updates instantly.
+* **Outbid Notifications:** Get alerts if someone outbids you.
+* **Easy to Use:** Simple and intuitive interface for all users
+
+## Technologies:
+Typescript, Next.JS, Next Auth, Postgresql, Docker, Drizzle ORM, AWS S3, Knocklabs, TailwindCSS
+
+## Demo Video:
+![ezgif-6-e5336f266c](https://github.com/padwhen/bidwhen/assets/123895854/ce23b2d7-4ed9-4a07-b0ab-927946f53655)
+
 
 ## Getting Started
 
