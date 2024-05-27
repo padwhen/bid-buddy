@@ -4,8 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createItemAction, createUploadUrlAction } from "./actions";
 import { pageTitleStyles } from "@/styles";
+import { DatePickerDemo } from "@/components/date-picker";
+import React from "react";
 
-export default async function HomePage() {
+export default function HomePage() {
+  const [date, setDate] = React.useState<Date | undefined>()
 
   return (
     <main className="container mx-auto py-12 space-y-8">
@@ -15,6 +18,11 @@ export default async function HomePage() {
       <form className="flex flex-col border p-8 rounded-xl space-y-4 max-w-lg"
             onSubmit={async (e) => {
               e.preventDefault()
+
+              if (!date) {
+                return;
+              }
+
               const form = e.currentTarget as HTMLFormElement
               const formData = new FormData(form)
               const file = formData.get("file") as File;
@@ -35,7 +43,8 @@ export default async function HomePage() {
               await createItemAction({
                 name,
                 startingPrice: startingPriceInCents,
-                fileName: file.name
+                fileName: file.name,
+                endDate: date,
               })
             }}>
         <Input required className="max-w-md" name="name" placeholder="Name your item" />
@@ -45,6 +54,7 @@ export default async function HomePage() {
                step="0.01"
                placeholder="What to store your auction at?" />
         <Input type="file" name="file"></Input>
+        <DatePickerDemo date={date} setDate={setDate} />
         <Button className="self-end" type="submit">Post Item</Button>
       </form>
     </main>

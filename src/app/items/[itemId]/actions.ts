@@ -4,6 +4,7 @@ import { auth } from "@/auth"
 import { database } from "@/db/database";
 import { bids, items } from "@/db/schema";
 import { env } from "@/env";
+import { isBidOver } from "@/util/bids";
 import { Knock } from "@knocklabs/node";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -23,6 +24,10 @@ export async function createBidAction(itemId: number) {
 
     if (!item) {
         throw new Error("Item not found")
+    }
+
+    if (isBidOver(item)) {
+        throw new Error("This auction is already over")
     }
 
     const userId = session.user.id
